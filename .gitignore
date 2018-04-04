@@ -13,6 +13,8 @@ pids
 logs
 results
 
+
+
 data
 *.sqlite
 node_modules

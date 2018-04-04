@@ -1,0 +1,24 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: web-mnpm 
+spec:
+  rules:
+  - host: registry.mnpm.maizuo.com
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: web-mnpm
+          servicePort: 7001
+  - host: mnpm.maizuo.com
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: web-mnpm
+          servicePort: 7002
+        # path: /aaa
+        # backend:
+        #   serviceName: web-mnpm
+        #   servicePort: 7002

@@ -1,0 +1,34 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: web-mnpm
+  namespace: sdyxmall
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: web-mnpm
+    spec:
+      containers:
+        - name: web-mnpm
+          image: reg.miz.so/jike/web-mnpm:v1.0.2
+          imagePullPolicy: Always
+          ports:
+          - containerPort: 7001
+          - containerPort: 7002
+          resources:
+            # keep request = limit to keep this container in guaranteed class
+            limits:
+              cpu: 500m
+              memory: 512Mi
+            requests:
+              cpu: 100m
+              memory: 256Mi
+          volumeMounts:
+            - name: hello-docker-vol
+              mountPath: /usr/local/app/web-mnpm/logs
+      volumes:
+        - name: hello-docker-vol
+          hostPath:
+            path: /data/logs

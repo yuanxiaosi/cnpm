@@ -1,0 +1,81 @@
+#!/bin/sh
+
+project_name="web-mnpm"
+
+name_space="sdyxmall"
+img_name="jike/web-mnpm"
+
+dev_docker_url="reg.miz.so"
+prod_docker_url="reg.maizuo.com"
+
+deploy_yaml_name="dep.yaml"
+
+
+if [ ${1}x == "dev"x ]
+then
+  context="dev_context"
+  img_url="reg.miz.so"
+  k8s_path="./k8s/dev"
+elif [ ${1}x == "prod"x ]
+then
+  context="prod_context"
+  img_url="reg.maizuo.com"
+  k8s_path="./k8s/prod"
+else
+  echo "请输入正确环境"
+  exit 1
+fi
+
+
+if [ ${2}x == ""x ];then
+  echo "请输入tag"
+  exit 2
+fi
+
+check_error(){
+  if [ $? -ne 0 ]; then
+    echo "error!!!"
+    exit
+  fi
+}
+
+docker_task(){
+
+  println "$img_url/$img_name:${2}"
+  docker build -t "$img_url/$img_name:${2}" .
+  docker push "$img_url/$img_name:${2}"
+
+  echo "docker finish"
+  echo "----------------------------"
+}
+
+kubectl_task(){
+  old_img=`grep -o 'image:.\+' $k8s_path/$deploy_yaml_name`
+  new_img="image: $img_url/$img_name:${2}"
+
+  sed -i "" "s#$old_img#$new_img#" $k8s_path/$deploy_yaml_name
+
+  kubectl config set-context $context --namespace=$name_space
+  kubectl config use-context $context --namespace=$name_space
+
+  kubectl delete -f $k8s_path/
+  kubectl create -f $k8s_path/
+
+  echo "kubectl finish"
+  echo "----------------------------"
+  
+}
+
+main(){
+  docker_task $@
+
+  kubectl_task $@
+
+  echo "finish"
+  echo "----------------------------"
+}
+
+main $@
+
+
+

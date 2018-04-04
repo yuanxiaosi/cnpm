@@ -1,0 +1,20 @@
+{
+  "name": "web-mnpm",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@gogs.miz.so:vicky/web-mnpm.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cnpmjs.org": "^2.19.4",
+    "sqlite3": "^3.1.13"
+  }
+}
